@@ -1,0 +1,7 @@
+question,refused,message
+What is the weather in Tel Aviv tomorrow?,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."
+Write me a recipe for chocolate cake.,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."
+Who won the football match yesterday?,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."
+Explain photosynthesis in simple words.,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."
+Write a short poem about the sea.,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."
+What time is it in New York right now?,True,"The first input is not a CV. This agent only tailors a CV to a job description, so the request was refused and nothing was saved."

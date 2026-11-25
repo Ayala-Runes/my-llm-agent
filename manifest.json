@@ -1,0 +1,33 @@
+{
+  "name": "CV Tailor Agent",
+  "version": "1.0.0",
+  "description": "Tailors a CV to a job description in Hebrew or English. Nothing is saved without the user's approval, and CVs that do not match the job are refused.",
+  "target_audience": "Job seekers who want a CV adapted to a specific role",
+  "professional_fields": ["Career services", "Human resources"],
+  "tasks_capable_of_performing": [
+    "Check that the input is a CV and that it matches the job",
+    "Analyze matching and missing skills",
+    "Rewrite the CV for the job without adding facts",
+    "Verify the rewrite against the original CV",
+    "Save a Word file after user approval"
+  ],
+  "technical_specifications": {
+    "framework": "LangGraph",
+    "llm_provider": "OpenRouter",
+    "supported_models": [
+      "anthropic/claude-sonnet-5",
+      "google/gemma-4-31b-it"
+    ],
+    "features_enabled": {
+      "rag": true,
+      "web_search": false,
+      "code_execution": false,
+      "mcp_support": false,
+      "human_in_the_loop": true,
+      "monitoring": "LangSmith"
+    },
+    "required_permissions": ["local_file_read", "local_file_write"],
+    "repository_url": "https://github.com/YOUR-USER/my-llm-agent",
+    "download_url": "https://github.com/YOUR-USER/my-llm-agent/releases/latest"
+  }
+}

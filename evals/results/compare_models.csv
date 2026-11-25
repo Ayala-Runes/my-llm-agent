@@ -1,0 +1,5 @@
+model,sample,seconds,score,error
+anthropic/claude-sonnet-5,python_developer,19.41,5,
+anthropic/claude-sonnet-5,data_analyst,15.49,4,
+google/gemma-4-31b-it:free,python_developer,2.55,,Error code: 429 - Provider returned error
+google/gemma-4-31b-it:free,data_analyst,2.05,,Error code: 429 - Provider returned error
