@@ -74,6 +74,49 @@ build.bat
 
 The exe is created in `dist\agent.exe`.
 
+## Architecture
+
+The agent is a LangGraph `StateGraph`. Each node reads and writes fields of a shared `AgentState`, and conditional edges decide the next step.
+
+```mermaid
+flowchart TD
+    A[guardrails] -->|not a CV| X((END: refused))
+    A -->|CV| B[gap_analyzer]
+    B -->|NO_FIT| X
+    B -->|FIT| C[tailor]
+    C --> D[evaluator]
+    D -->|FAIL and attempts < 3| C
+    D -->|PASS or attempts = 3| E[gate: human approval]
+    E -->|Y| F[writer]
+    E -->|N| X
+    F --> X
+```
+
+### Nodes
+
+| Node | Role |
+|------|------|
+| `guardrails` | Checks that both inputs are non-empty and that the first input is a CV. Off-topic input is refused here. |
+| `gap_analyzer` | Compares the CV with the job description and returns FIT or NO_FIT. A NO_FIT result stops the run with an error and nothing is saved. |
+| `tailor` | Rewrites the CV in the same language, using only facts from the original. It retrieves writing guidelines from the knowledge base (RAG) and adds the evaluator's feedback when retrying. |
+| `evaluator` | Checks the rewrite for relevance, factual accuracy, completeness and format, and returns PASS or FAIL with feedback. |
+| `gate` | Pauses the graph with `interrupt()` and shows the proposed CV. The user answers Y or N. |
+| `writer` | Builds the Word (.docx) file with headings, bullets and right-to-left formatting for Hebrew. |
+
+### State
+
+`AgentState` holds: `cv_text`, `job_text`, `analysis`, `tailored`, `eval_passed`, `eval_feedback`, `attempts`, `approved`, `output_path`, `error`, and `usage` (token counts per node).
+
+### Key design decisions
+
+- **Human in the loop.** The `gate` node uses LangGraph `interrupt()` and resumes with `Command(resume=...)`. A `MemorySaver` checkpointer keeps the state between the pause and the resume.
+- **Self-correction loop.** A failed evaluation sends the CV back to `tailor` with feedback, up to 3 attempts. After that, the best version goes to the user for approval.
+- **Scope control.** Two checks prevent misuse: `guardrails` rejects input that is not a CV, and `gap_analyzer` rejects a CV that does not match the job.
+- **Retrieval (RAG).** The knowledge base is `agent/knowledge/cv_guidelines.txt`. `agent/tools.py` scores paragraphs by shared words with the query and returns the top matches.
+- **Model provider.** All model calls go through OpenRouter using `langchain_openai.ChatOpenAI` with the OpenRouter base URL. The model is set with `MODEL_NAME`.
+- **Observability.** LangSmith traces every run when `LANGSMITH_TRACING=true`.
+- **Cost tracking.** Each node records token usage from `usage_metadata`. The CLI prints the cost per node and the total using `agent/pricing.py`.
+
 ## Project structure
 
 ```
