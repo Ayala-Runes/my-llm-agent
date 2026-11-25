@@ -27,7 +27,7 @@
       "monitoring": "LangSmith"
     },
     "required_permissions": ["local_file_read", "local_file_write"],
-    "creator_name": "Ayala-runes",
+    "creator_name": "Ayala Runes",
     "repository_url": "https://github.com/Ayala-runes/my-llm-agent",",
     "download_url": "https://github.com/Ayala-runes/my-llm-agent/releases/tag/v1.0.0"
   }
